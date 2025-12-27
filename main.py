@@ -1,4 +1,4 @@
-# main.py — ЧИСТАЯ ВЕРСИЯ БЕЗ FLASK
+# main.py
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -39,21 +39,20 @@ async def game_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("❌ Ошибка. Напишите /start.")
 
 if __name__ == "__main__":
-    # Безопасное получение токена — удаляем ВСЕ пробелы
+    # Очищаем токен от пробелов и переносов
     BOT_TOKEN = "".join(os.environ["BOT_TOKEN"].split())
     WEBHOOK_URL = os.environ["WEBHOOK_URL"].rstrip("/")
 
     logger.info("✅ Запуск бота...")
-    logger.info(f"Webhook URL: {WEBHOOK_DIR}/{BOT_TOKEN[:10]}...")
+    logger.info(f"Webhook установлен на: {WEBHOOK_URL}/{BOT_TOKEN[:10]}...")
 
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(game_handler))
 
-    # Запуск ЧЕРЕЗ ВСТРОЕННЫЙ СЕРВЕР (tornado), без Flask!
     app.run_webhook(
         listen="0.0.0.0",
         port=int(os.environ.get("PORT", 10000)),
         webhook_url=f"{WEBHOOK_URL}/{BOT_TOKEN}",
-        url_path=BOT_TOKEN  # <-- это создаёт endpoint /ваш_токен
+        url_path=BOT_TOKEN
     )
