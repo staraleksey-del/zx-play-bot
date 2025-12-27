@@ -1,4 +1,7 @@
 # main.py
+BOT_TOKEN = os.environ["BOT_TOKEN"].strip().replace(" ", "").replace("\n", "").replace("\r", "")
+WEBHOOK_URL = os.environ["WEBHOOK_URL"].rstrip("/")  # убираем слеш в конце
+
 import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
